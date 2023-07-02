@@ -1,9 +1,10 @@
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class BaseCharacter {
-    private final String FORMAT = "#0.00";
+public abstract class BaseCharacter implements CharacterInterface{
+    private final static String FORMAT = "#0.00";
 
     private String name;
     private String sex;

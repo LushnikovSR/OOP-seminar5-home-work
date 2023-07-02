@@ -15,4 +15,14 @@ public class Monk extends BaseWarrior {
             System.out.println(target.getName() + " is " + target.getLiveStatus());
         }
     }
+
+    @Override
+    public void step() {
+
+    }
+
+    @Override
+    public String getInfo() {
+        return String.valueOf((this.getClass())).replace("class ", "");
+    }
 }

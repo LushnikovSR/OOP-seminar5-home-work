@@ -35,6 +35,16 @@ public class BaseMagician extends BaseShooter {
         }
     }
 
+    @Override
+    public void step() {
+
+    }
+
+    @Override
+    public String getInfo() {
+        return null;
+    }
+
     enum Weapons{
         magic_stuff, stick, magic_wand, sword, gloves, rings, fists
     }

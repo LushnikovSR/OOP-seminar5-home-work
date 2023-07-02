@@ -15,4 +15,14 @@ public class Developer extends BaseCharacter {
             target = null;
         }
     }
+
+    @Override
+    public void step() {
+
+    }
+
+    @Override
+    public String getInfo() {
+        return String.valueOf((this.getClass())).replace("class ", "");
+    }
 }

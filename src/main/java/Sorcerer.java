@@ -10,4 +10,14 @@ public class Sorcerer extends BaseMagician {
         int points = new Random().nextInt(10, 20);
         target.addHealthPoints(points);
     }
+
+    @Override
+    public void step() {
+
+    }
+
+    @Override
+    public String getInfo() {
+        return String.valueOf((this.getClass())).replace("class ", "");
+    }
 }
