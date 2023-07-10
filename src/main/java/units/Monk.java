@@ -1,9 +1,13 @@
+package units;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Monk extends BaseWarrior {
 
-    public Monk(String name){
-        super(name);
+    public Monk(String name, int x, int y){
+        super(name, x, y);
+        setInitiative(4);
     }
 
     public void treat(BaseCharacter target){
@@ -17,12 +21,14 @@ public class Monk extends BaseWarrior {
     }
 
     @Override
-    public void step() {
-
+    public void step(ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam) {
+        BaseCharacter foe = nearestTargetAttack(enemyTeam);
+        attack(foe);
     }
 
     @Override
     public String getInfo() {
-        return String.valueOf((this.getClass())).replace("class ", "");
+        return String.valueOf((this.getClass())).replaceAll("^[\\w+]+\\s[\\w+]+\\.", "") + " "
+                + this.getName() + " " + "hp: " + this.getHealth();
     }
 }

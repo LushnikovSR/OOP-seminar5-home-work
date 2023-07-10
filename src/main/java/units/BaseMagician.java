@@ -1,9 +1,13 @@
+package units;
+
+import java.util.ArrayList;
+
 public class BaseMagician extends BaseShooter {
 
     int mana;
     int maxMana;
-    public BaseMagician(String name) {
-        super(name);
+    public BaseMagician(String name, int x, int y) {
+        super(name, x, y);
         this.mana = 200;
     }
     protected int getMana(){
@@ -22,6 +26,7 @@ public class BaseMagician extends BaseShooter {
             if (points > 0) {
                 setMana(getMana() - 10);
                 target.subtractHealthPoints(points);
+                System.out.print(this.getName() + " magic and ");
                 System.out.println(target.getName() + " less " + points + " points of health ");
             }
             if (target.getHealth() <= 0) {
@@ -36,7 +41,7 @@ public class BaseMagician extends BaseShooter {
     }
 
     @Override
-    public void step() {
+    public void step(ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam) {
 
     }
 
@@ -62,7 +67,7 @@ public class BaseMagician extends BaseShooter {
     }
 
 //    @Override
-//    public void attack(BaseCharacter target){
+//    public void attack(units.BaseCharacter target){
 ////        if (target.getLiveStatus() == LiveStatuses.live){
 ////            int points = (int)Math.floor(advantagePower(target) * advantageGrowth(target)
 ////                    * (getDamage() * getShootingAccuracy())) - target.getProtection();

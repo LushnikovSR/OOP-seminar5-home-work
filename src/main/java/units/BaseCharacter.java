@@ -1,9 +1,11 @@
+package units;
+
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class BaseCharacter implements CharacterInterface{
+public abstract class BaseCharacter extends Area implements CharacterInterface{
     private final static String FORMAT = "#0.00";
 
     private String name;
@@ -16,10 +18,12 @@ public abstract class BaseCharacter implements CharacterInterface{
     private LocalDate birthday;
     private float height;
     private int power;
+    public int initiative;
     private int speed;
     private int protection;
 
-    private BaseCharacter(){
+    private BaseCharacter(int x, int y){
+        super(x, y);
         this.level = 1;
         this.experience = 0;
         this.liveStatus = LiveStatuses.live;
@@ -28,26 +32,27 @@ public abstract class BaseCharacter implements CharacterInterface{
         this.maxHealth = 200;
         this.height = Float.parseFloat((new DecimalFormat(FORMAT)
                 .format(new Random().nextFloat(150, 220))).replace(',', '.'));
-        this.power = new Random().nextInt(10);
-        this.speed = new Random().nextInt(10);
-        this.protection = 0;
+        this.power = new Random().nextInt(0,10);
+        this.initiative = 1;
+        this.speed = new Random().nextInt(0,10);
+        this.protection = 1;
     }
 
-    public BaseCharacter(String name, String sex){
-        this();
+    public BaseCharacter(String name, String sex, int x, int y){
+        this(x, y);
         this.name = name;
         this.sex = sex;
     }
 
-    public BaseCharacter(String name){
-        this(name, "male");
+    public BaseCharacter(String name, int x, int y){
+        this(name, "male", x, y);
     }
 
     public String getName(){
         return this.name;
     }
 
-    public void setName(String name){
+    protected void setName(String name){
         if (!name.matches("[a-zA-Z][0-9]")){
             this.name = name;
         } else {
@@ -119,6 +124,14 @@ public abstract class BaseCharacter implements CharacterInterface{
         this.protection = armor;
     }
 
+    protected int getInitiative(){
+        return this.initiative;
+    }
+
+    protected void setInitiative(int value){
+        this.initiative = value;
+    }
+
     protected int getLevel(){
         return this.level;
     }
@@ -157,15 +170,33 @@ public abstract class BaseCharacter implements CharacterInterface{
 
     protected void newLevel(){
         switch (getExperience()) {
-            case 10: upLevel();
-            case 20: upLevel();
-            case 40: upLevel();
-            case 60: upLevel();
-            case 120: upLevel();
-            case 160: upLevel();
-            case 320: upLevel();
-            case 480: upLevel();
-            case 960: upLevel();
+            case 10:
+                upLevel();
+                break;
+            case 20:
+                upLevel();
+                break;
+            case 40:
+                upLevel();
+                break;
+            case 60:
+                upLevel();
+                break;
+            case 120:
+                upLevel();
+                break;
+            case 160:
+                upLevel();
+                break;
+            case 320:
+                upLevel();
+                break;
+            case 480:
+                upLevel();
+                break;
+            case 960:
+                upLevel();
+                break;
         }
     }
 
@@ -175,6 +206,17 @@ public abstract class BaseCharacter implements CharacterInterface{
         setHealth(getMaxHealth());
         if (this.getPower() < 10) { setPower(this.power + 1); }
         if (this.getHeight() < 210.0f) { setHeight(this.height + 10); }
+    }
+    public BaseCharacter nearestTargetAttack(ArrayList <BaseCharacter> enemyTeam){
+        double nearest = nearestEnemy(enemyTeam.get(0));
+        int index = 0;
+        for (int i = 1; i < enemyTeam.size(); i++) {
+            if (nearestEnemy(enemyTeam.get(i)) < nearest){
+                nearest = nearestEnemy(enemyTeam.get(i));
+                index = i;
+            }
+        }
+        return enemyTeam.get(index);
     }
 
 }

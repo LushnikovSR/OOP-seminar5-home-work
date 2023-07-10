@@ -1,10 +1,12 @@
+package units;
+
 public abstract class BaseWarrior extends BaseCharacter{
     private float impactAccuracy;
     private int damage;
-    public BaseWarrior(String name){
-        super(name);
+    public BaseWarrior(String name, int x, int y){
+        super(name, x, y);
         this.impactAccuracy = 0.3f;
-        this.damage = 4;
+        this.damage = 40;
     }
 
     protected int getDamage(){
@@ -29,7 +31,8 @@ public abstract class BaseWarrior extends BaseCharacter{
                     * (getDamage() * getImpactAccuracy())) - target.getProtection();
             if (points > 0) {
                 target.subtractHealthPoints(points);
-                System.out.println(target.getName() + " less " + points + " points of health ");
+                System.out.print(this.getName() + " fight and ");
+                System.out.println(target.getName() + " loses " + points + " points of health ");
             }
             if (target.getHealth() <= 0) {
                 target.setLiveStatus(LiveStatuses.dead);
@@ -76,12 +79,24 @@ public abstract class BaseWarrior extends BaseCharacter{
 
     protected void takeWeapon(Weapons weapon){
         switch (weapon) {
-            case fists: setDamage(4);
-            case stick: setDamage(7);
-            case knife: setDamage(15);
-            case cudgel: setDamage(30);
-            case sword: setDamage(50);
-            case excalibur: setDamage(200);
+            case fists:
+                setDamage(4);
+                break;
+            case stick:
+                setDamage(7);
+                break;
+            case knife:
+                setDamage(15);
+                break;
+            case cudgel:
+                setDamage(30);
+                break;
+            case sword:
+                setDamage(50);
+                break;
+            case excalibur:
+                setDamage(200);
+                break;
         }
     }
     enum Weapons{
