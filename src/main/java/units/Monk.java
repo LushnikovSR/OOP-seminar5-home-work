@@ -3,32 +3,21 @@ package units;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Monk extends BaseWarrior {
+public class Monk extends BaseMagician {
 
     public Monk(String name, int x, int y){
         super(name, x, y);
-        setInitiative(4);
-    }
-
-    public void treat(BaseCharacter target){
-        if (target.getLiveStatus() == LiveStatuses.live) {
-            int points = new Random().nextInt(10, 20);
-            target.addHealthPoints(points);
-            System.out.println(target.getName() + " get " + points + " points of health");
-        } else {
-            System.out.println(target.getName() + " is " + target.getLiveStatus());
-        }
+        super.setInitiative(2);
+        super.takeWeapon(Weapons.stick);
     }
 
     @Override
     public void step(ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam) {
-        BaseCharacter foe = nearestTargetAttack(enemyTeam);
-        attack(foe);
+        super.step(enemyTeam, myTeam);
     }
 
     @Override
     public String getInfo() {
-        return String.valueOf((this.getClass())).replaceAll("^[\\w+]+\\s[\\w+]+\\.", "") + " "
-                + this.getName() + " " + "hp: " + this.getHealth();
+        return super.getInfo();
     }
 }

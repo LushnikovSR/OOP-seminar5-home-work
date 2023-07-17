@@ -2,17 +2,17 @@ package units;
 
 import java.util.ArrayList;
 
-public class Sniper extends BaseShooter {
-    public Sniper(String name, int x, int y){
+public class Wizard extends BaseMagician {
+
+    public Wizard(String name, int x, int y) {
         super(name, x, y);
-        super.setInitiative(1);
-        super.takeWeapon(Weapons.gun);
+        super.setInitiative(2);
+        super.takeWeapon(Weapons.magic_wand);
     }
 
     @Override
     public void step(ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam) {
         super.step(enemyTeam, myTeam);
-        super.arrowSource(myTeam, Former.class);
     }
 
     @Override

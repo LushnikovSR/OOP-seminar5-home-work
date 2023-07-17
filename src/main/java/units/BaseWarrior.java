@@ -1,20 +1,65 @@
 package units;
 
+import java.util.ArrayList;
+
 public abstract class BaseWarrior extends BaseCharacter{
     private float impactAccuracy;
-    private int damage;
+
     public BaseWarrior(String name, int x, int y){
         super(name, x, y);
         this.impactAccuracy = 0.3f;
-        this.damage = 40;
+        super.setArmor(15);
     }
 
-    protected int getDamage(){
-        return this.damage;
+    protected void takeWeapon(Weapons weapon){
+        switch (weapon) {
+            case fists:
+                setDamage(50);
+                break;
+            case stick:
+                setDamage(100);
+                break;
+            case knife:
+                setDamage(150);
+                break;
+            case spear:
+                setDamage(200);
+                break;
+            case sword:
+                setDamage(250);
+                break;
+            case excalibur:
+                setDamage(300);
+                break;
+        }
+    }
+    enum Weapons{
+        fists, stick, knife, spear, sword, excalibur
     }
 
-    protected void setDamage(int weaponDamage){
-        this.damage = weaponDamage;
+    @Override
+    public void step(ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam) {
+        if ((super.getHealth() == 0) || (super.liveFoeIndex(enemyTeam) < 0)){return;}
+        BaseCharacter foe = super.nearestTargetAttack(enemyTeam);
+        this.attack(foe);
+    }
+
+    protected void attack(BaseCharacter target){
+        if ((target.getState() == State.live) || (target.getState() == State.busy)){
+            int points = (int)Math.floor(this.advantagePower(target) * this.advantageGrowth(target)
+                    * (super.getDamage() * this.getImpactAccuracy())) - target.getArmor();
+            if (points > 0) {
+                target.subtractHealthPoints(points);
+                System.out.print(this.getName() + " fight and ");
+                System.out.println(target.getName() + " loses " + points + " points of health ");
+            }
+            if (target.getHealth() <= 0) {
+                target.setState(State.dead);
+                target.setHealth(0);
+                System.out.println(target.getName() + " is " + target.getState());
+                target = null;
+            }
+        }
     }
 
     protected float getImpactAccuracy(){
@@ -23,26 +68,6 @@ public abstract class BaseWarrior extends BaseCharacter{
 
     private void setImpactAccuracy(float value){
         this.impactAccuracy = value;
-    }
-
-    public void attack(BaseCharacter target){
-        if (target.getLiveStatus() == LiveStatuses.live){
-            int points = (int)Math.floor(advantagePower(target) * advantageGrowth(target)
-                    * (getDamage() * getImpactAccuracy())) - target.getProtection();
-            if (points > 0) {
-                target.subtractHealthPoints(points);
-                System.out.print(this.getName() + " fight and ");
-                System.out.println(target.getName() + " loses " + points + " points of health ");
-            }
-            if (target.getHealth() <= 0) {
-                target.setLiveStatus(LiveStatuses.dead);
-                target.setHealth(0);
-                System.out.println(target.getClass() + " " + target.getName() + " is " + target.getLiveStatus());
-                target = null;
-            }
-            experienceGain();
-            newLevel();
-        }
     }
 
     protected float advantageGrowth (BaseCharacter target){
@@ -58,7 +83,7 @@ public abstract class BaseWarrior extends BaseCharacter{
     }
 
     protected float advantagePower (BaseCharacter target){
-        switch (getPower() - target.getPower()){
+        switch (super.getPower() - target.getPower()){
             case 1: return 1.1f;
             case 2: return 1.2f;
             case 3: return 1.3f;
@@ -70,37 +95,6 @@ public abstract class BaseWarrior extends BaseCharacter{
             case 9: return 1.9f;
             default: return 1.0f;
         }
-    }
-
-    @Override
-    protected void upLevel(){
-        setImpactAccuracy(this.impactAccuracy + 0.1f);
-    }
-
-    protected void takeWeapon(Weapons weapon){
-        switch (weapon) {
-            case fists:
-                setDamage(4);
-                break;
-            case stick:
-                setDamage(7);
-                break;
-            case knife:
-                setDamage(15);
-                break;
-            case cudgel:
-                setDamage(30);
-                break;
-            case sword:
-                setDamage(50);
-                break;
-            case excalibur:
-                setDamage(200);
-                break;
-        }
-    }
-    enum Weapons{
-        fists, stick, knife, cudgel, sword, excalibur
     }
 
 }

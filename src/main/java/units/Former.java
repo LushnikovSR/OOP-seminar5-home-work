@@ -2,17 +2,19 @@ package units;
 
 import java.util.ArrayList;
 
-public class Sniper extends BaseShooter {
-    public Sniper(String name, int x, int y){
+public class Former extends BaseWarrior {
+    public Former(String name, int x, int y){
         super(name, x, y);
-        super.setInitiative(1);
-        super.takeWeapon(Weapons.gun);
+        super.setInitiative(4);
+        super.takeWeapon(Weapons.stick);
     }
 
     @Override
     public void step(ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam) {
         super.step(enemyTeam, myTeam);
-        super.arrowSource(myTeam, Former.class);
+        if (!(this.getState() == State.dead)){
+            super.setState(State.live);
+        }
     }
 
     @Override

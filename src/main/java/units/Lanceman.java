@@ -5,18 +5,17 @@ import java.util.ArrayList;
 public class Lanceman extends BaseWarrior {
     public Lanceman(String name, int x, int y){
         super(name, x, y);
-        setInitiative(5);
+        super.setInitiative(3);
+        super.takeWeapon(Weapons.spear);
     }
 
     @Override
     public void step(ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam) {
-        BaseCharacter foe = nearestTargetAttack(enemyTeam);
-        attack(foe);
+        super.step(enemyTeam, myTeam);
     }
 
     @Override
     public String getInfo() {
-        return String.valueOf((this.getClass())).replaceAll("^[\\w+]+\\s[\\w+]+\\.", "") + " "
-                + this.getName() + " " + "hp: " + this.getHealth();
+        return super.getInfo();
     }
 }

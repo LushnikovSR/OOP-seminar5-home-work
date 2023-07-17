@@ -6,18 +6,20 @@ public class Peasant extends BaseWarrior {
 
     public Peasant(String name, int x, int y){
         super(name, x, y);
-        setInitiative(6);
+        super.setInitiative(4);
+        super.takeWeapon(Weapons.stick);
     }
 
     @Override
     public void step(ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam) {
-        BaseCharacter foe = nearestTargetAttack(enemyTeam);
-        attack(foe);
+        super.step(enemyTeam, myTeam);
+        if (!(this.getState() == State.dead)){
+            super.setState(State.live);
+        }
     }
 
     @Override
     public String getInfo() {
-        return String.valueOf((this.getClass())).replaceAll("^[\\w+]+\\s[\\w+]+\\.", "") + " "
-                + this.getName() + " " + "hp: " + this.getHealth();
+        return super.getInfo();
     }
 }

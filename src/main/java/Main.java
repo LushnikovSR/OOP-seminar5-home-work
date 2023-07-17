@@ -1,11 +1,16 @@
 import units.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
+
+    public static ArrayList<BaseCharacter> teamWhite = new ArrayList<>();
+    public static ArrayList<BaseCharacter> teamBlack = new ArrayList<>();
+    public static ArrayList<BaseCharacter> fightingTeams = new ArrayList<>();
+
     public static void main(String[] args) {
 //        ДЗ - 1
 //        Крестьянин, разработчик, снайпер, колдун, копейщик, арбалетчик, монах.
@@ -40,25 +45,48 @@ public class Main {
 //        5.Если среди своих есть крестьянин вернуть управление
 //        6.Если нет крестьян уменьшить кол-во стрел на одну и вернуть управление
 //
+//        Семинар - 5
+//        Заполнить степ крестьянина:
+//        1. Проверяет здоровье, если больше 0 сбрасывает флаг.
+//        Изменить степ лучника:
+//        1. Находит первого Крестьянина и ставит ему флаг занят.
 
-        Peasant peasant = new Peasant("Bob", 0,0);
-        Developer developer = new Developer("James", 0,0);
-        Sniper sniper = new Sniper("Cris", 0,0);
-        Sorcerer sorcerer = new Sorcerer("Saruman", 0,0);
-        Lanceman lanceman = new Lanceman("Enkidu", 0,0);
-        Crossbowman crossbowman = new Crossbowman("Rhodok", 0,0);
-        Monk monk = new Monk("Aaron", 0,0);
+//        Семинар - 6
+//        1. Проверяем здоровье
+//        2. Ищем ближайшего врага
+//        3. Двигаемся в сторну врага
+//        4. Не наступаем на живых персонажей
+//        5. Если расстояние до врага одна клетка бём его!
+//
 
-        ArrayList<BaseCharacter> teamWhite = new ArrayList<>();
-        ArrayList<BaseCharacter> teamBlack = new ArrayList<>();
-        ArrayList<BaseCharacter> fightingTeams = new ArrayList<>();
-
-        fillTeam(teamWhite, 1);
-        fillTeam(teamBlack, 10);
+        fillTeam(teamWhite, 1, true);
+        fillTeam(teamBlack, 10, false);
 
         fightingTeams.addAll(teamWhite);
         fightingTeams.addAll(teamBlack);
         fightingTeams.sort(Comparator.comparingInt((BaseCharacter hero) -> hero.initiative));
+
+        Scanner in = new Scanner(System.in);
+        while (true){
+            View.view();
+            in.nextLine();
+
+            for (BaseCharacter hero : fightingTeams) {
+                if (teamWhite.contains(hero)) {
+                    hero.step(teamBlack, teamWhite);
+                } else {
+                    hero.step(teamWhite, teamBlack);
+                }
+            }
+            if (allUnitsDie(teamWhite)){
+                System.out.println("\nteamBlack (Blue) win");
+                break;
+            }
+            if (allUnitsDie(teamBlack)){
+                System.out.println("\nteamWhite (Green) win");
+                break;
+            }
+        }
 
 //        System.out.println("teamWhite: ");
 //        showHeroes(teamWhite);
@@ -71,67 +99,76 @@ public class Main {
 //        teamWhite.forEach(n -> n.step(teamBlack, teamWhite)); // Поиск среди противников наиболее приближенного и вывести в консоль.
 //        teamBlack.forEach(n -> n.step(teamWhite, teamBlack));
 
-        System.out.println("teamWhite: ");
-        teamWhite.forEach(n -> System.out.println(n.getInfo() + " init: " + n.initiative));
-        System.out.println("teamBlack: ");
-        teamBlack.forEach(n -> System.out.println(n.getInfo() + " init: " + n.initiative));
-        System.out.println("========Fight========");
+//        System.out.println("teamWhite: ");
+//        teamWhite.forEach(n -> System.out.println(n.getInfo() + " init: " + n.initiative));
+//        System.out.println("teamBlack: ");
+//        teamBlack.forEach(n -> System.out.println(n.getInfo() + " init: " + n.initiative));
+//        System.out.println("========Fight========");
 
-        for (BaseCharacter hero: fightingTeams) {
-//            System.out.println(hero.getInfo());
-            if (teamWhite.contains(hero)){
-                hero.step(teamBlack, teamWhite);
-            } else {
-                hero.step(teamWhite, teamBlack);
-            }
-        }
 
-        System.out.println("========FINAL========");
-        System.out.println("teamWhite: ");
-        teamWhite.forEach(n -> System.out.println(n.getInfo()));
-        System.out.println("teamBlack: ");
-        teamBlack.forEach(n -> System.out.println(n.getInfo()));
+//        System.out.println("========FINAL========");
+//        System.out.println("teamWhite: ");
+//        teamWhite.forEach(n -> System.out.println(n.getInfo()));
+//        System.out.println("teamBlack: ");
+//        teamBlack.forEach(n -> System.out.println(n.getInfo()));
     }
 
-    public static void fillTeam(ArrayList<BaseCharacter> list, int teamSide){
+    public static void fillTeam(ArrayList<BaseCharacter> list, int teamSide, boolean lightForces) {
         final int TEAM_SIZE = 10;
 
-        enum heroesClasses {
-            Peasant, Developer, Sniper, Sorcerer, Lanceman, Crossbowman, Monk
-        }
-
         for (int i = 1; i < TEAM_SIZE + 1; i++) {
-            int randNum = new Random().nextInt(0, heroesClasses.values().length);
-            switch (randNum){
-                case 0:
-                    list.add(new Peasant("peasant" + "_" + i, teamSide, i));
-                    break;
-                case 1:
-                    list.add(new Developer("developer" + "_" + i, teamSide, i));
-                    break;
-                case 2:
-                    list.add(new Sniper("sniper" + "_" + i, teamSide, i));
-                    break;
-                case 3:
-                    list.add(new Sorcerer("sorcerer" + "_" + i, teamSide, i));
-                    break;
-                case 4:
-                    list.add(new Lanceman("lanceman" + "_" + i, teamSide, i));
-                    break;
-                case 5:
-                    list.add(new Crossbowman("crossbowman" + "_" + i, teamSide, i));
-                    break;
-                case 6:
-                    list.add(new Monk("monk" + "_" + i, teamSide, i));
-                    break;
+            int randNum = new Random().nextInt(0, heroesClasses.values().length / 2);
+            if (lightForces == true) {
+                switch (randNum) {
+                    case 0:
+                        list.add(new Sniper("sniper" + "_" + i, teamSide, i));
+                        break;
+                    case 1:
+                        list.add(new Monk("monk" + "_" + i, teamSide, i));
+                        break;
+                    case 2:
+                        list.add(new Lanceman("lanceman" + "_" + i, teamSide, i));
+                        break;
+                    case 3:
+                        list.add(new Former("former" + "_" + i, teamSide, i));
+                        break;
+                }
+            } else {
+                switch (randNum) {
+                    case 0:
+                        list.add(new Crossbowman("crossbowman" + "_" + i, teamSide, i));
+                        break;
+                    case 1:
+                        list.add(new Wizard("wizard" + "_" + i, teamSide, i));
+                        break;
+                    case 2:
+                        list.add(new Robber("robber" + "_" + i, teamSide, i));
+                        break;
+                    case 3:
+                        list.add(new Peasant("peasant" + "_" + i, teamSide, i));
+                        break;
+                }
             }
+
         }
     }
 
-    public static void showHeroes(ArrayList<BaseCharacter> teamName){
-        for (BaseCharacter hero: teamName) {
+    enum heroesClasses {
+        Sniper, Monk, Lanceman, Former, Crossbowman, Wizard, Robber, Peasant
+    }
+
+    static void showHeroes (ArrayList < BaseCharacter > teamName) {
+        for (BaseCharacter hero : teamName) {
             System.out.println(hero.getInfo() + " " + hero.getName() + " x: " + hero.x + " y: " + hero.y);
         }
     }
 
+    static boolean allUnitsDie(ArrayList<BaseCharacter> team){
+        for (BaseCharacter unit: team) {
+            if (unit.getHealth() > 0){
+                return false;
+            }
+        }
+        return true;
+    }
 }
