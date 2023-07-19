@@ -1,6 +1,7 @@
 package units;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class BaseWarrior extends BaseCharacter{
     private float impactAccuracy;
@@ -41,7 +42,58 @@ public abstract class BaseWarrior extends BaseCharacter{
     public void step(ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam) {
         if ((super.getHealth() == 0) || (super.liveFoeIndex(enemyTeam) < 0)){return;}
         BaseCharacter foe = super.nearestTargetAttack(enemyTeam);
-        this.attack(foe);
+        System.out.println(this.getName() + " distance to foe: " + distance(foe));
+        if (this.distance(foe) < 2){
+            this.attack(foe);
+        } else {
+            int[] coords = this.getStepCoords(foe);
+            if (this.stepPossibility(coords, enemyTeam, myTeam)){
+                System.out.println(this.getName() + "move to" + Arrays.toString(coords));
+                this.moveTo(coords);
+            }
+        }
+    }
+
+    private int distance(BaseCharacter target){
+        return Math.abs((this.coordinates.x + this.coordinates.y) - (target.coordinates.x + target.coordinates.y));
+    }
+
+    private int[] getStepCoords(BaseCharacter foe){
+        int[] coords = {x, y};
+        if (Math.abs(this.coordinates.y - foe.coordinates.y) > Math.abs(this.coordinates.x - foe.coordinates.x)){
+            if (this.coordinates.y < foe.coordinates.y){
+                coords[1] = this.coordinates.y += 1;
+            } else {
+                coords[1] = this.coordinates.y-=1;
+            }
+        } else {
+            if (this.coordinates.x < foe.coordinates.x){
+                coords[0] = this.coordinates.x+=1;
+            } else {
+                coords[0] = this.coordinates.x-=1;
+            }
+        }
+        return coords;
+    }
+
+    private boolean stepPossibility(int[] coords, ArrayList<BaseCharacter> enemyTeam, ArrayList<BaseCharacter> myTeam){
+        for (BaseCharacter unit: enemyTeam) {
+            if ((unit.coordinates.x == coords[0]) && (unit.coordinates.y == coords[1])){
+                return false;
+            }
+        }
+        for (BaseCharacter unit: myTeam) {
+            if ((unit.coordinates.x == coords[0]) && (unit.coordinates.y == coords[1])){
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    private void moveTo(int[] coords){
+        this.coordinates.x = coords[0];
+        this.coordinates.y = coords[1];
     }
 
     protected void attack(BaseCharacter target){

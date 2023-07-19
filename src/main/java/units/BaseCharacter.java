@@ -18,7 +18,7 @@ public abstract class BaseCharacter extends Area implements CharacterInterface {
     private int speed;
     private int armor;
 
-    private Area coordinates;
+    public Area coordinates;
 
     protected BaseCharacter(int x, int y) {
         super(x, y);
@@ -149,11 +149,6 @@ public abstract class BaseCharacter extends Area implements CharacterInterface {
             }
         }
         return -1;
-    }
-
-    public int[] getCoords() {
-        int[] coord = new int[]{coordinates.x, coordinates.y};
-        return coord;
     }
 
     @Override
